@@ -7,30 +7,53 @@ const operations = {
   reversSign: (a) => a * -1,
 };
 
-const number = document.querySelectorAll("number");
+const displayPrevValue = document.querySelector(
+  ".calculator___display--preValue"
+);
+const displayCurrValue = document.querySelector(
+  ".calculator___display--currValue"
+);
+
+class Calculator {
+  constructor(displayPrevValue, displayCurrValue) {
+    this.displayPrevValue = displayPrevValue;
+    this.displayCurrValue = displayCurrValue;
+    this.prevValue = "";
+    this.currValue = "";
+  }
+  addNumber(number) {
+    this.currValue += number;
+    this.printDisplay();
+  }
+  erase() {
+    this.currValue = this.currValue.toString().slice(0, -1);
+    this.printDisplay();
+  }
+  eraseEverything() {
+    this.currValue = "";
+    this.prevValue = "";
+    this.printDisplay();
+  }
+  printDisplay() {
+    this.displayCurrValue.innerHTML = this.currValue;
+    this.displayPrevValue.innerHTML = this.prevValue;
+  }
+}
+
+const calculate = new Calculator(displayPrevValue, displayCurrValue);
+
 const btn = document.querySelector(".calculator__buttons");
-const displayValue = document.querySelector(".display-value");
 const r = /[0-9]/;
 
 btn.addEventListener("click", (e) => {
   const keyword = e.target.value;
   if (r.test(keyword)) {
-    writeToDOM(keyword);
+    calculate.addNumber(keyword);
   }
   if (keyword === "C") {
-    erase(displayValue);
+    calculate.erase();
   }
   if (keyword === "AC") {
-    eraseEverything(displayValue);
+    calculate.eraseEverything();
   }
 });
-
-function writeToDOM(content) {
-  displayValue.innerHTML += content;
-}
-function erase(element) {
-  element.innerHTML = element.innerHTML.slice(0, -1);
-}
-function eraseEverything(element) {
-  element.innerHTML = "";
-}
