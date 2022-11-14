@@ -7,14 +7,6 @@ const operations = {
   subtraction: (a, b) => a - b,
   percentage: (a, b) => a * (b / 100),
 };
-
-const displayPrevValue = document.querySelector(
-  ".calculator___display--preValue"
-);
-const displayCurrValue = document.querySelector(
-  ".calculator___display--currValue"
-);
-
 class Calculator {
   constructor(displayPrevValue, displayCurrValue) {
     this.displayPrevValue = displayPrevValue;
@@ -23,8 +15,10 @@ class Calculator {
     this.currValue = "";
     this.operator = null;
   }
-  addNumber(number) {
-    this.currValue += number;
+  addToScreen(element) {
+    element.toString();
+    this.currValue += element;
+    this.operator === null ? "" : (this.currValue += this.operator);
     this.printDisplay();
   }
   compute() {
@@ -58,7 +52,6 @@ class Calculator {
     this.operator = operator;
     console.log(operator);
     this.printDisplay();
-
   }
   printDisplay() {
     this.displayCurrValue.innerHTML = this.currValue;
@@ -67,8 +60,13 @@ class Calculator {
   }
 }
 
+const displayPrevValue = document.querySelector(
+  ".calculator___display--preValue"
+);
+const displayCurrValue = document.querySelector(
+  ".calculator___display--currValue"
+);
 const calculate = new Calculator(displayPrevValue, displayCurrValue);
-
 const btn = document.querySelector(".calculator__buttons");
 const r = /[0-9]/;
 
@@ -76,7 +74,7 @@ btn.addEventListener("click", (e) => {
   const keyword = e.target.value;
   const className = e.target.className;
   if (r.test(keyword)) {
-    calculate.addNumber(keyword);
+    calculate.addToScreen(keyword);
   }
   if (keyword === "C") {
     calculate.erase();
@@ -85,6 +83,7 @@ btn.addEventListener("click", (e) => {
     calculate.eraseEverything();
   }
   if (className === "operator") {
+    calculate.addToScreen(e.target.textContent);
     calculate.operator(keyword);
   }
   if (keyword === "=") {
